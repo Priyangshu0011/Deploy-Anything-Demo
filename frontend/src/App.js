@@ -19,7 +19,7 @@ function App() {
 
   return (
     <div style={{ padding: "40px" }}>
-      <h1>DeployX FULL CI/CD WORKING 🚀></h1>
+      <h1>DeployX FULL CI/CD WORKING🚀></h1>
 
       <input
         type="file"
