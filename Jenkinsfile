@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_TAG = "${BUILD_NUMBER}"
+    }
+
     stages {
 
         stage('Clone Repository') {
@@ -12,26 +16,26 @@ pipeline {
 
         stage('Build Backend Docker Image') {
             steps {
-                sh 'cd backend && docker build -t deployx-backend .'
+                sh 'cd backend && docker build -t deployx-backend:$IMAGE_TAG .'
             }
         }
 
         stage('Build Frontend Docker Image') {
             steps {
-                sh 'cd frontend && docker build -t deployx-frontend .'
+                sh 'cd frontend && docker build -t deployx-frontend:$IMAGE_TAG .'
             }
         }
 
-        stage('Restart Kubernetes Deployments') {
+        stage('Update Kubernetes Deployments') {
             steps {
-                sh 'kubectl rollout restart deployment backend-deployment'
-                sh 'kubectl rollout restart deployment frontend-deployment'
+                sh 'kubectl set image deployment/backend-deployment backend=deployx-backend:$IMAGE_TAG'
+                sh 'kubectl set image deployment/frontend-deployment frontend=deployx-frontend:$IMAGE_TAG'
             }
         }
 
         stage('Success') {
             steps {
-                echo 'FULL CI/CD PIPELINE WORKING 🚀'
+                echo "FULL CI/CD WORKING 🚀"
             }
         }
     }
