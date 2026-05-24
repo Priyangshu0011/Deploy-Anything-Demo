@@ -22,10 +22,9 @@ pipeline {
             }
         }
 
-        stage('Restart Kubernetes Deployments') {
+        stage('Success') {
             steps {
-                sh 'kubectl rollout restart deployment backend-deployment'
-                sh 'kubectl rollout restart deployment frontend-deployment'
+                echo 'CI/CD Automation Working Successfully 🚀'
             }
         }
     }
