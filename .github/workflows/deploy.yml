@@ -20,21 +20,33 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
+    # =========================
+    # BUILD BACKEND
+    # =========================
+
     - name: Build Backend Image
       run: |
-        docker build -t priyangshu0011/deployx-backend:${{ github.sha }} ./backend
+        docker build -t priyangshu0011/deployx-backend:latest ./backend
 
     - name: Push Backend Image
       run: |
-        docker push priyangshu0011/deployx-backend:${{ github.sha }}
+        docker push priyangshu0011/deployx-backend:latest
+
+    # =========================
+    # BUILD FRONTEND
+    # =========================
 
     - name: Build Frontend Image
       run: |
-        docker build -t priyangshu0011/deployx-frontend:${{ github.sha }} ./frontend
+        docker build -t priyangshu0011/deployx-frontend:latest ./frontend
 
     - name: Push Frontend Image
       run: |
-        docker push priyangshu0011/deployx-frontend:${{ github.sha }}
+        docker push priyangshu0011/deployx-frontend:latest
+
+    # =========================
+    # DEPLOY TO EC2
+    # =========================
 
     - name: Deploy to EC2
       uses: appleboy/ssh-action@master
@@ -46,14 +58,24 @@ jobs:
 
         script: |
 
+          export KUBECONFIG=/home/ubuntu/.kube/config
+
+          docker pull priyangshu0011/deployx-backend:latest
+
+          docker pull priyangshu0011/deployx-frontend:latest
+
           kubectl set image deployment/backend-deployment \
-          backend=priyangshu0011/deployx-backend:${{ github.sha }}
+          backend=priyangshu0011/deployx-backend:latest
 
           kubectl set image deployment/frontend-deployment \
-          frontend=priyangshu0011/deployx-frontend:${{ github.sha }}
+          frontend=priyangshu0011/deployx-frontend:latest
 
           kubectl rollout restart deployment backend-deployment
 
           kubectl rollout restart deployment frontend-deployment
+
+          kubectl delete pod -l app=backend
+
+          kubectl delete pod -l app=frontend
 
           kubectl get pods
