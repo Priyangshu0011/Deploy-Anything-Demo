@@ -22,19 +22,19 @@ jobs:
 
     - name: Build Backend Image
       run: |
-        docker build -t priyangshu0011/deployx-backend:latest ./backend
+        docker build -t priyangshu0011/deployx-backend:${{ github.sha }} ./backend
 
     - name: Push Backend Image
       run: |
-        docker push priyangshu0011/deployx-backend:latest
+        docker push priyangshu0011/deployx-backend:${{ github.sha }}
 
     - name: Build Frontend Image
       run: |
-        docker build -t priyangshu0011/deployx-frontend:latest ./frontend
+        docker build -t priyangshu0011/deployx-frontend:${{ github.sha }} ./frontend
 
     - name: Push Frontend Image
       run: |
-        docker push priyangshu0011/deployx-frontend:latest
+        docker push priyangshu0011/deployx-frontend:${{ github.sha }}
 
     - name: Deploy to EC2
       uses: appleboy/ssh-action@master
@@ -45,7 +45,15 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
 
         script: |
+
+          kubectl set image deployment/backend-deployment \
+          backend=priyangshu0011/deployx-backend:${{ github.sha }}
+
+          kubectl set image deployment/frontend-deployment \
+          frontend=priyangshu0011/deployx-frontend:${{ github.sha }}
+
           kubectl rollout restart deployment backend-deployment
+
           kubectl rollout restart deployment frontend-deployment
 
           kubectl get pods
