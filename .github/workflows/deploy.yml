@@ -38,7 +38,7 @@ jobs:
 
     - name: Build Frontend Image
       run: |
-        docker build -t priyangshu0011/deployx-frontend:latest ./frontend
+        docker build --no-cache -t priyangshu0011/deployx-frontend:latest ./frontend
 
     - name: Push Frontend Image
       run: |
