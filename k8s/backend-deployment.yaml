@@ -18,6 +18,7 @@ spec:
 
     spec:
       containers:
+
       - name: backend
 
         image: priyangshu0011/deployx-backend:latest
@@ -29,7 +30,13 @@ spec:
 
         env:
         - name: AWS_ACCESS_KEY_ID
-          value: "YOUR_ACCESS_KEY"
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret
+              key: accesskey
 
         - name: AWS_SECRET_ACCESS_KEY
-          value: "YOUR_SECRET_KEY"
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret
+              key: secretkey
