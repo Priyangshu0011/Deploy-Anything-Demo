@@ -18,9 +18,19 @@ spec:
 
     spec:
       containers:
+
       - name: backend
-        image: deployx-backend:latest
-        imagePullPolicy: Never
+
+        image: priyangshu0011/deployx-backend:latest
+
+        imagePullPolicy: Always
 
         ports:
         - containerPort: 5000
+
+        env:
+        - name: AWS_ACCESS_KEY_ID
+          value: "PASTE_YOUR_ACCESS_KEY"
+
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "PASTE_YOUR_SECRET_KEY"
