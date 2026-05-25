@@ -10,7 +10,7 @@ function App() {
     formData.append("image", image);
 
     const res = await axios.post(
-      "http://13.204.120.208:5000/upload",
+      "http://13.204.120.208:30050/upload",
       formData
     );
 
