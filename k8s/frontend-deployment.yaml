@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: deployx-frontend
+        image: priyangshu0011/deployx-frontend:latest
         imagePullPolicy: Never
 
         ports:

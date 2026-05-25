@@ -1,0 +1,37 @@
+name: DeployX CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ubuntu
+        key: ${{ secrets.EC2_SSH_KEY }}
+
+        script: |
+          cd ~/deployx-mern
+
+          git pull origin main
+
+          docker build --no-cache -t deployx-backend:latest ./backend
+
+          docker build --no-cache -t deployx-frontend:latest ./frontend
+
+          kubectl delete pod -l app=backend || true
+
+          kubectl delete pod -l app=frontend || true
+
+          kubectl get pods

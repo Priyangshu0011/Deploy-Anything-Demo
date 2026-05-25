@@ -1,5 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: backend-deployment
 
@@ -18,7 +19,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: priyangshu0011/deployx-backend:latest
+        image: deployx-backend:latest
         imagePullPolicy: Never
 
         ports:
